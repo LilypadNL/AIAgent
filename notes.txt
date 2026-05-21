@@ -1,7 +1,0 @@
-activate virtual environment with: source .venv/bin/activate
-
-previously: 
-uv venv
-source .venv/bin/activate
-uv add google-genai==1.12.1
-uv add python-dotenv==1.1.0

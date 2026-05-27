@@ -1,15 +1,16 @@
 import os.path
-from config.py import MAX_FILE_CONTENT_LENGTH
+from config import MAX_FILE_CONTENT_LENGTH  #entry-point for the function is in root dir with config.py
 
 def get_file_content(working_directory: str, file_path: str) -> str:
     
     try: 
+
+        working_dir_abs = os.path.abspath(working_directory)
+        tar_file = os.path.normpath(os.path.join(working_dir_abs, file_path))
+
         #determine if file is in the working directory and that the working directory exists
         if not os.path.exists(working_directory):
             return f'    Error: Working directory does not exist'
-        working_dir_abs = os.path.abspath(working_directory)
-        
-        tar_file = os.path.normpath(os.path.join(working_dir_abs, file_path))
         if not os.path.commonpath([working_dir_abs, tar_file]) == working_dir_abs:
             return f'    Error: Cannot read "{file_path}" as it is outside the permitted working directory'
         if not os.path.isfile(tar_file):

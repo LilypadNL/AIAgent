@@ -1,5 +1,26 @@
 import os.path
 from os import makedirs
+from google.genai import types
+
+schema_write_file = types.FunctionDeclaration(
+    name="write_file",
+    description="Writes or overwrites content to a specified file, creating intermediate directories if they do not exist",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="File path to write content to, relative to the working directory",
+            ),
+            "content": types.Schema(
+                type=types.Type.STRING,
+                description="The content to write to the file as a string",
+            ),
+        },
+        required=["file_path", "content"]
+    ),
+)
+
 
 def write_file(working_directory: str, file_path: str, content: str) -> str:
 

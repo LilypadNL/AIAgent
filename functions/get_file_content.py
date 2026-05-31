@@ -1,5 +1,22 @@
 import os.path
 from config import MAX_FILE_CONTENT_LENGTH  #entry-point for the function is in root dir with config.py
+from google.genai import types
+
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Returns the contents of a specified file as a string with a maximum length of 10000 characters",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="File path from which to read the content, relative to the working directory",
+            ),
+        },
+        required=["file_path"]
+    ),
+)
+
 
 def get_file_content(working_directory: str, file_path: str) -> str:
     

@@ -1,8 +1,10 @@
 import os
+import argparse
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-import argparse
+from prompts import system_prompt
+from call_function import available_functions
 
 #Load the API key from the .env file. If the key is not found, raise runtime error.
 load_dotenv()
@@ -16,11 +18,6 @@ parser.add_argument("user_prompt_contents", type=str, help="User prompt")
 parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 
 client = genai.Client(api_key=api_key)
-#response = client.models.generate_content(
-#            model='gemini-2.5-flash', contents = user_prompt_contents
-#        )
-
-#message = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
 
 
 
@@ -34,7 +31,12 @@ def main():
     
     #Calls the API to generate content based on the messages list.
     response = client.models.generate_content(
-            model = 'gemini-2.5-flash', contents = messages
+            model = 'gemini-2.5-flash', 
+            contents = messages,
+            config = types.GenerateContentConfig(
+                tools=[available_functions], 
+                system_instruction = system_prompt
+                )
             )
     
     #Verbose output and error handling for missing usage metadata.
@@ -47,7 +49,11 @@ def main():
         raise RuntimeError("usage_metadata is None. Likely a failed API request.")
 
     print("Response:")
-    print(response.text)
+    if response.function_calls == None:
+        print({response.text})
+    else:
+        for FunctionCall in response.function_calls:
+            print(f'Calling function: {FunctionCall.name}({FunctionCall.args})')
 
 
 if __name__ == "__main__":

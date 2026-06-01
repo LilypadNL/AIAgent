@@ -1,0 +1,1 @@
+AIAgent is a toy AI agent without proper security protections. Use extreme caution when using this, and be sure to limit the filesystems it has access to. You can set your own API key in a .env file in the project's working directory.
